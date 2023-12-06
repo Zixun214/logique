@@ -1,0 +1,45 @@
+Problème rencontré:
+
+Pour le cas de decompose, ma réduction initiale fait une decompose pour tout le system d'équation au lieu de l'équation traité.
+
+
+Pour le cas de substitution de b par Y,
+La substitution ne fait que l'échange d'un élément,
+Il faut changer toute la terme.
+b ?= _19622
+
+
+En cas de simplification, pas tous les vars sont remplacé.
+Unifier: [_674?=a,_676?=g(_674)]
+Regle choix: simplify pour equation _674?=a
+Reduit par simplify : [a?=a,_676?=g(_674)]
+
+Ici la deuxième var _674 n'est pas changé.
+Il faut cette var dans toute la liste soit remplacé.
+
+
+Pour unification de f(X,Y) et f(Y,X)
+Le résultat initial est suivant :
+unifie([f(X, Y) ?= f(Y, X)]).
+Unifier: [f(_19212,_19214)?=f(_19214,_19212)]
+Regle choix: decompose pour equation f(_19212,_19214)?=f(_19214,_19212)
+Reduit par decompose : [_19212?=_19214,_19214?=_19212]
+Unifier: [_19212?=_19214,_19214?=_19212]
+Regle choix: rename pour equation _19212?=_19214
+Reduit par rename : [_19214?=_19214]
+Unifier: [_19214?=_19214]
+Regle choix: rename pour equation _19214?=_19214
+Reduit par rename : []
+true .
+
+Mais en réalité, il doit être false.
+Mon réduction initiale est :
+reduit(rename, X ?= Y, P, Q) :-
+    select(X ?= Y, P, RestP),
+    substitute(X, Y, RestP, Q),
+    echo('Reduit par rename : '), echo(Q), nl.
+
+Il manque le cas où X et Y sont 2 variables.
+
+
+我重新整理了一下我的思路和project，我有7个推倒函数，分别是：rename，simplify，expand，check，orient，decopose和clash。
